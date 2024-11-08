@@ -10,9 +10,10 @@ bspc config border_width         1
 bspc config focused_border_color "#FF0000"
 bspc config window_gap           1
 
-bspc config split_ratio          0.52
-bspc config borderless_monocle   true
-bspc config gapless_monocle      true
+bspc config split_ratio           0.52
+bspc config borderless_monocle    true
+bspc config gapless_monocle       true
+bspc config focus_follows_pointer true
 
 bspc rule -a Gimp desktop='^8' state=floating follow=on
 bspc rule -a Chromium desktop='^2'
@@ -20,10 +21,11 @@ bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 bspc rule -a discord desktop='^2'
-bspc rule -a xyz.armcord.ArmCord desktop='^2'
 bspc rule -a ArmCord desktop='^2'
 bspc rule -a Discord desktop='^2'
 bspc rule -a armcord desktop='^2'
+bspc rule -a vesktop desktop='^2'
+bspc rule -a vesktop.bin desktop='^2'
 bspc rule -a steam desktop='^3'
 
 ~/.config/polybar/launch.sh --forest &
@@ -36,6 +38,7 @@ dunst &
 
 #Start Redshift
 killall -q redshift redshift-gtk
-while pgrep -u $UID -x redshift redshift-gtk >/dev/null; do sleep 1; done
+redshift -x 
+while pgrep -u $UID redshift -x redshift-gtk >/dev/null; do sleep 1; done
 redshift -x &
 redshift-gtk &

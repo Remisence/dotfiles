@@ -14,9 +14,9 @@ super + @space
 super + Escape
 	pkill -USR1 -x sxhkd
 
-#
-# bspwm hotkeys
-#
+################################################
+#                 bspwm hotkeys                #
+################################################
 
 # quit/restart bspwm
 super + alt + {Escape,r}
@@ -26,9 +26,32 @@ super + alt + {Escape,r}
 super + {_,shift + }w
 	bspc node -{c,k}
 
-# alternate between the tiled and monocle layout
-super + m
-	bspc desktop -l next
+################################################
+#                  Navigation                  #
+################################################
+
+# focus the node in the given direction
+ctrl + {j,k,i,l}
+	bspc node -s {west,south,north,east}
+
+# expand/contract a window
+super + shift + {j,k,i,l}
+	bspc node -z {left -20 0 || bspc node -z right -20 0, \
+				  bottom 0 20 || bspc node -z top 0 20, \
+				  top 0 -20 || bspc node -z bottom 0 -20, \
+				  right 20 0 || bspc node -z left 20 0}
+
+# move a floating window
+super + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Move current window to a pre-selected space
+super + shift + m
+    bspc node -n last.!automatic
+
+# rotate window placement
+super + r
+	bspc node @/ -R 90
 
 # send the newest marked node to the newest preselected node
 super + y
@@ -38,9 +61,13 @@ super + y
 super + g
 	bspc node -s biggest.window
 
-#
-# state/flags
-#
+#######################################
+#             State/Flags             #
+#######################################
+
+# alternate between the tiled and monocle layout
+super + m
+	bspc desktop -l next
 
 # set the window state
 super + {t,s,f}
@@ -50,9 +77,9 @@ super + {t,s,f}
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
 
-#
-# focus/swap
-#
+#######################################
+#                Focus                #
+#######################################
 
 # focus the node in the given direction
 super + {j,k,i,l}
@@ -70,9 +97,9 @@ alt + {grave,Tab}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}' --follow
 
-#
-# preselect
-#
+##############################################
+#                  Preselect                 #
+##############################################
 
 # preselect the direction
 super + ctrl + {j,k,i,l}
@@ -90,42 +117,38 @@ super + ctrl + space
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
-#
-# move/resize
-#
+#################################################
+#              Screenshotting                   #
+#################################################
 
-# expand a window by moving one of its side outward
-super + shift + {h,j,k,l}
-	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+# take partial screenshot and copy to clipboard
+Print
+	maim -s | xclip -selection clipboard -t image/png
+	
+# take partial screenshot and save it to Pictures/Screenshots
+ctrl + Print
+	maim -s maim ~/Pictures/Screenshots/image$(date +%d_%m_%y-%H-%M).png
 
-# contract a window by moving one of its side inward
-super + alt + shift + {h,j,k,l}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+# take a full screenshot and save to Pictures/Screenshots folder at home dir
+shift + Print
+	maim ~/Pictures/Screenshots/image$(date +%d_%m_%y-%H-%M).png
+	
+# take a screenshot of the activewindow and save to Pictures/Screenshots
+ctrl + shift + Print
+	maim -i $(xdotool getactivewindow) ~/Pictures/Screenshots/image$(date +%d_%m_%y-%H-%M).png
 
-# move a floating window
-super + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
+###############################################
+#               Media Keys                    #
+###############################################
 
-# Move current window to a pre-selected space
-super + shift + m
-    bspc node -n last.!automatic
-
-# rotate window placement
-super + r
-	bspc node @/ -R 90
-
-################################################
-#               MEDIA KEYS                     #
-################################################
+# mute audio
 XF86AudioMute
  amixer -q -D pulse sset Master toggle &
 
+# increase/decrease volume by 5%
 XF86Audio{Lower,Raise}Volume
  amixer -q -D pulse sset Master 5%{-,+} unmute &
 
-# Player Play/Pause
+# player Play/Pause
 XF86Audio{Play,Prev,Next}
 	playerctl {play-pause,previous,next} &
-
-
-
