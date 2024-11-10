@@ -30,7 +30,7 @@ super + {_,shift + }w
 #                  Navigation                  #
 ################################################
 
-# focus the node in the given direction
+# move node in the given direction
 ctrl + {j,k,i,l}
 	bspc node -s {west,south,north,east}
 
@@ -60,6 +60,10 @@ super + y
 # swap the current node and the biggest window
 super + g
 	bspc node -s biggest.window
+	
+# swap desktops
+super + alt + {1-9,0}
+	bspc desktop ^1:focused -s ^{1-9,10}
 
 #######################################
 #             State/Flags             #
@@ -76,6 +80,14 @@ super + {t,s,f}
 # set the node flags
 super + ctrl + {m,x,y,z}
 	bspc node -g {marked,locked,sticky,private}
+	
+# Hide/Unhide window
+super + {_,shift + }h
+	bspc node {--flag hidden=on,any.hidden.window -g hidden=off}
+
+# Unhide ALL windows
+super + d	
+	while bspc node any.hidden.window -g hidden=off; do :; done
 
 #######################################
 #                Focus                #
@@ -83,7 +95,7 @@ super + ctrl + {m,x,y,z}
 
 # focus the node in the given direction
 super + {j,k,i,l}
-	bspc node -{f} {west,south,north,east}
+	bspc node -f {west,south,north,east}
 
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
@@ -114,8 +126,8 @@ super + ctrl + space
 	bspc node -p cancel
 
 # cancel the preselection for the focused desktop
-super + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+#super + ctrl + shift + space
+#	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
 #################################################
 #              Screenshotting                   #
