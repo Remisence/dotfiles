@@ -100,7 +100,15 @@ super + {j,k,i,l}
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
-
+	
+# Cycle focus between floating window (super + shift + c) and tiled window (super + c)
+super + {_,shift + }c
+	 bspc node {'next.local.!focused.!hidden.!floating.!fullscreen.window','next.local.!focused.!hidden.floating'} -f
+	    	    
+# control node layer
+super + {control + shift + o, shift + o, o}
+	bspc node -l {below,normal,above}
+    
 # focus the last node/desktop
 alt + {grave,Tab}
 	bspc {node,desktop} -f last
@@ -108,7 +116,7 @@ alt + {grave,Tab}
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}' --follow
-
+	
 ##############################################
 #                  Preselect                 #
 ##############################################

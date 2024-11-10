@@ -30,6 +30,10 @@ xwallpaper --center /usr/share/backgrounds/linuxmint/bookwood_linuxmint.jpg &
 xsetroot -cursor_name /home/remi/.local/share/icons/default/index.theme &
 dunst &
 
+while bspc subscribe --count 1 node_focus > /dev/null; do
+        bspc node focused.floating --layer above
+        bspc node focused.floating --layer normal
+done
 
 #Start Redshift
 #killall -q redshift redshift-gtk
