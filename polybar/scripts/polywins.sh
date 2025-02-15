@@ -47,54 +47,27 @@ main() {
 
 # ON-CLICK FUNCTIONS {{{ ---
 
+
+
 raise_or_minimize() {
 	if [ "$(get_active_wid)" = "$1" ]; then
-		wmctrl -ir "$1" -b toggle,hidden
+		bspc node "$1" --flag hidden=on
 	else
-		wmctrl -ir "$1" -b remove,hidden; wmctrl -ia "$1"
+		bspc node "$1" --flag hidden=off; wmctrl -ia "$1"
 	fi
 }
+
+#raise_or_minimize() {
+	#if [ "$(get_active_wid)" = "$1" ]; then
+		#wmctrl -ir "$1" -b toggle,hidden
+	#else
+		#wmctrl -ir "$1" -b remove,hidden; wmctrl -ia "$1"
+	#fi
+#}
 
 close() {
 	wmctrl -ic "$1"
 }
-
-slop_resize() {
-	wmctrl -ia "$1"
-	wmctrl -ir "$1" -e "$(slop -f 0,%x,%y,%w,%h)"
-}
-
-increment_size() {
-	while IFS="[ .]" read -r wid ws wx wy ww wh _; do
-		test "$wid" != "$1" && continue
-		x=$(( wx - wm_border_width * 2 - resize_increment / 2 ))
-		y=$(( wy - wm_border_width * 2 - resize_increment / 2 ))
-		w=$(( ww + resize_increment ))
-		h=$(( wh + resize_increment ))
-	done <<-EOF
-	$(wmctrl -lG)
-	EOF
-
-	wmctrl -ir "$1" -e "0,$x,$y,$w,$h"
-}
-
-decrement_size() {
-	while IFS="[ .]" read -r wid ws wx wy ww wh _; do
-		test "$wid" != "$1" && continue
-		x=$(( wx - wm_border_width * 2 + resize_increment / 2 ))
-		y=$(( wy - wm_border_width * 2 + resize_increment / 2 ))
-		w=$(( ww - resize_increment ))
-		h=$(( wh - resize_increment ))
-	done <<-EOF
-	$(wmctrl -lG)
-	EOF
-
-	wmctrl -ir "$1" -e "0,$x,$y,$w,$h"
-}
-
-# --- }}}
-
-
 
 # WINDOW LIST SETUP {{{ ---
 
@@ -210,12 +183,11 @@ generate_window_list() {
 		# Add on-click action Polybar formatting
 		printf "%s" "%{A1:$on_click raise_or_minimize $wid:}"
 		printf "%s" "%{A2:$on_click close $wid:}"
-		printf "%s" "%{A3:$on_click slop_resize $wid:}"
-		printf "%s" "%{A4:$on_click increment_size $wid:}"
-		printf "%s" "%{A5:$on_click decrement_size $wid:}"
+		printf "%s" "%{A3:$on_click increment_size $wid:}"
+		printf "%s" "%{A4:$on_click decrement_size $wid:}"
 		# Print the final window name
 		printf "%s" "$w_name"
-		printf "%s" "%{A}%{A}%{A}%{A}%{A}"
+		printf "%s" "%{A}%{A}%{A}%{A}"
 
 		window_count=$(( window_count + 1 ))
 	done <<-EOF
@@ -228,11 +200,6 @@ generate_window_list() {
 		printf "%s" "+$(( window_count - max_windows ))"
 	fi
 
-	# Print empty desktop message if no windows are open
-	if [ "$window_count" = 0 ]; then
-		printf "%s" "$empty_desktop_message"
-	fi
-	
 	# Print newline
 	echo ""
 }
