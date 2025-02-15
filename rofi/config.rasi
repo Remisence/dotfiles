@@ -6,6 +6,8 @@
  * Configuration For Rofi Version: 1.7.3
  **/
 
+@import "/launcher/theme/simple.rasi"
+
 configuration {
 	/*---------- General setting ----------*/
 	modi: "drun,run,filebrowser,window";
