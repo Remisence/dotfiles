@@ -31,7 +31,7 @@ rofi_cmd() {
 
 # Confirmation CMD
 confirm_cmd() {
-	rofi -theme-str 'window {location: center; anchor: center; fullscreen: false; width: 325px;}' \
+	rofi -theme-str 'window {location: north east; anchor: north east; fullscreen: false; width: 325px;}' \
 		-theme-str 'mainbox {children: [ "message", "listview" ];}' \
 		-theme-str 'listview {columns: 2; lines: 1;}' \
 		-theme-str 'element-text {vertical-align: 0.5; padding: 5 px;}' \
